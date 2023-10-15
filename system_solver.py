@@ -16,6 +16,7 @@ from sympy.abc import alpha, beta, zeta, S, Z, R, I, rho, k, Q, sigma, gamma, c
 
 
 def basic_model():
+    """System of Equations given in Section 2."""
     equations = [-1 * beta * S * Z,
                  beta * S * Z + zeta * R - alpha * S * Z,
                  alpha * S * Z - zeta * R
@@ -26,6 +27,7 @@ def basic_model():
 
 
 def SIZR_model():
+    """System of Equations given in section 3."""
     equations = [
         -1 * beta * S * Z,
         -1 * I * rho + beta * S * Z,
@@ -37,6 +39,7 @@ def SIZR_model():
 
 
 def short_outbreak():
+    """System of Equations given in section 4. The model with Quarantine."""
     equations = [
         -1 * beta * S * Z,
         beta * S * Z - rho * I - k * I,
@@ -49,6 +52,7 @@ def short_outbreak():
 
 
 def Model_with_Treatment():
+    """System given in section 5. Model with Treatment."""
     equations = [
         -1*beta*S*Z + c*Z,
         beta*S*Z - rho*I,
@@ -59,10 +63,12 @@ def Model_with_Treatment():
     return sol
 
 
+# Store the results in a dictionary
 res = {"Basic Model": basic_model(),
        "SIZR Model": SIZR_model(),
        "Short Outbreak": short_outbreak(),
        "Model with Treatment": Model_with_Treatment()}
+
 
 # formatting to print
 for n, o in res.items():
