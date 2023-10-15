@@ -73,3 +73,10 @@ res = {"Basic Model": basic_model(),
 # formatting to print
 for n, o in res.items():
     print(n + ":", o)
+
+# These are the outputs, if you don't want to run them:
+
+# Basic Model: [(0, Z, 0), (S, 0, 0)]
+# SIZR Model: [(0, 0, Z, 0), (S, 0, 0, 0)]
+# Short Outbreak: [(0, 0, Z, Z*sigma/zeta, Z*sigma/gamma), (S, 0, 0, 0, 0)]
+# Model with Treatment: [(S, 0, 0, 0), (c/beta, Z*c/rho, Z, Z*alpha*c/(beta*zeta))]
