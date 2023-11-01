@@ -10,7 +10,6 @@ Note:
                             given as an argument in sympy.solve()
     """
 
-
 from sympy import solve
 from sympy.abc import alpha, beta, zeta, S, Z, R, I, rho, k, Q, sigma, gamma, c
 
@@ -54,10 +53,10 @@ def short_outbreak():
 def Model_with_Treatment():
     """System given in section 5. Model with Treatment."""
     equations = [
-        -1*beta*S*Z + c*Z,
-        beta*S*Z - rho*I,
-        rho*I + zeta*R - alpha*S*Z - c*Z,
-        alpha*S*Z - zeta*R
+        -1 * beta * S * Z + c * Z,
+        beta * S * Z - rho * I,
+        rho * I + zeta * R - alpha * S * Z - c * Z,
+        alpha * S * Z - zeta * R
     ]
     sol = solve(equations, [S, I, Z, R])
     return sol
@@ -68,11 +67,11 @@ res = {"Basic Model": basic_model(),
        "SIZR Model": SIZR_model(),
        "Short Outbreak": short_outbreak(),
        "Model with Treatment": Model_with_Treatment()}
-
-
-# formatting to print
-for n, o in res.items():
-    print(n + ":", o)
+#
+#
+# # formatting to print
+# for n, o in res.items():
+#     print(n + ":", o)
 
 # These are the outputs, if you don't want to run them:
 
@@ -80,3 +79,7 @@ for n, o in res.items():
 # SIZR Model: [(0, 0, Z, 0), (S, 0, 0, 0)]
 # Short Outbreak: [(0, 0, Z, Z*sigma/zeta, Z*sigma/gamma), (S, 0, 0, 0, 0)]
 # Model with Treatment: [(S, 0, 0, 0), (c/beta, Z*c/rho, Z, Z*alpha*c/(beta*zeta))]
+import sys
+
+if __name__ == '__main__':
+    print(f'Simple SZR: {basic_model()}')
