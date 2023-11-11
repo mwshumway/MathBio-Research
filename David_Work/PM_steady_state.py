@@ -18,7 +18,7 @@ z = .002
 
 
 
-#Steady State 1
+#Steady State
 P = (-S_e*V*W*a*y - S_e*V*W*j*y - S_e*W*a*v_m + np.sqrt(S_e*W*(4*K_m*V*a**2*v_m*y + 4*K_m*V*a*j*v_m*y + S_e*V**2*W*a**2*y**2 + 2*S_e*V**2*W*a*j*y**2 + S_e*V**2*W*j**2*y**2 - 2*S_e*V*W*a**2*v_m*y - 2*S_e*V*W*a*j*v_m*y + S_e*W*a**2*v_m**2)))/(2*S_e*V*a*k*(K_m - S_e*W))
 P_b = y/a
 P_u = y/z
