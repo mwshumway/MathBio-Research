@@ -20,10 +20,12 @@ def full_model(initial_val, t, y, k, S_e, W, j, f, A_e, A_p, a, g, b, z, v_max, 
     dP_dt = y - (k * S_e * P) - ((k/W) * S * P) + (j*P_b) + (f*(A_e/A_p)*E)
     dPb_dt = (k * S_e * P) + ((k/W) * S * P) - (j * P_b) - (a*P_b)
     dPu_dt = (a * P_b) - (g*(A_p/A_e)*P_u)
-    dE_dt = (g * (A_e/A_p) * P_u) - (b * E_u) + (a * E_b) - (z * E_u)
-    dEb_dt = (b * E_u) - ((k/W) * S * E) + (j * E_b) - (f * E)
-    dEu_dt = ((k/W) * S * E) - (j * E_b) - (a * E_b)
-    dS_dt = ((-1*k/W) * S * (P + E)) + ((j + a) * (P_b + E_b)) - (v_max * S / (V * (K_m + S)))
+    dE_dt = (b * E_u) - ((k/W) * S * E) + (j * E_b) - (f * (A_e/A_p) *E)
+    dEb_dt = ((k / W) * S * E) - (j * E_b) - (a * E_b)
+    dEu_dt = (g * (A_p/A_e) * P_u) - (b * E_u) + (a * E_b) - (z * E_u)
+    dS_dt = (-(k/W) * S * ((A_p/V) * P + (A_e/V) * E)) + ((j + a) * ((A_p/V) * P_b + (A_e/V) * E_b)) - (v_max * S /
+                                                                                                    (V * (K_m + S)))
+    # dS_dt = ((-1*k/W) * S * (P + E)) + ((j + a) * (P_b + E_b)) - (v_max * S / (V * (K_m + S)))
 
     return [dP_dt, dPb_dt, dPu_dt, dE_dt, dEb_dt, dEu_dt, dS_dt]
 
@@ -75,7 +77,7 @@ def plot_FM():
         plt.plot(t_range, FM_sol[:, 0], 'b')
         plt.plot(t_range, FM_sol[:, 1], 'r')
         plt.plot(t_range, FM_sol[:, 2], 'g')
-        plt.plot(t_range, FM_sol[:, 3], 'm')
+        plt.plot(t_range, FM_sol[:, 3], 'm')  # dE/dt
         plt.plot(t_range, FM_sol[:, 4], 'orange')
         plt.plot(t_range, FM_sol[:, 5], 'k')
         plt.plot(t_range, FM_sol[:, 6], 'pink')
