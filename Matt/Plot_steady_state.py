@@ -53,4 +53,3 @@ plt.legend()
 plt.tight_layout()
 plt.xlabel("S_e")
 plt.show()
-
