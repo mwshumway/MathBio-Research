@@ -33,7 +33,7 @@ def plasma_membrane(S_e):
     return [P, P_b, P_u, S]
 
 
-S_e = np.linspace(0.001, 5, 1000)
+S_e = np.linspace(0.001, 0.05, 1000)
 P_vals = []
 Pb_vals = []
 Pu_vals = []
