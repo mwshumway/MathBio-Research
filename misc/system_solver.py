@@ -24,6 +24,7 @@ def basic_model():
     sol = solve(equations, [S, Z, R])
     return sol
 
+print(basic_model())
 
 def SIZR_model():
     """System of Equations given in section 3."""

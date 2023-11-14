@@ -50,7 +50,7 @@ for i in range(6):
     plt1.plot(t,sol[:,6],'k',label = "Intracellullar Uracil")
     plt1.set_xlabel("Time")
     plt1.set_title(f"S_e = {S_e}")
-    plt.legend()
+    # plt.legend()
     plt.grid()
     print(sol[:,0][-1])
 
