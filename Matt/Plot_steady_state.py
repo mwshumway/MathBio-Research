@@ -33,23 +33,57 @@ def plasma_membrane(S_e):
     return [P, P_b, P_u, S]
 
 
-S_e = np.linspace(0.001, 0.05, 1000)
-P_vals = []
-Pb_vals = []
-Pu_vals = []
-S_vals = []
-for s in S_e:
-    P, Pb, Pu, S = plasma_membrane(s)
-    P_vals.append(P)
-    Pb_vals.append(Pb)
-    Pu_vals.append(Pu)
-    S_vals.append(S)
-plt.plot(S_e, P_vals, label="P")
-plt.plot(S_e, Pb_vals, label="P_b")
-plt.plot(S_e, Pu_vals, label="P_u")
-plt.plot(S_e, S_vals, label="S")
+def plasma_membrane_noS(S_e, S):
+    P = (y*W*a + y*W*j) / (S_e*a*k*W + a*k*S)
+    Pb = y/a
+    Pu = y/z
 
-plt.legend()
-plt.tight_layout()
-plt.xlabel("S_e")
-plt.show()
+    return P, Pb, Pu
+
+def plot_plasma_membrane():
+    S_e = np.linspace(0.001, 0.05, 1000)
+    P_vals = []
+    Pb_vals = []
+    Pu_vals = []
+    S_vals = []
+    for s in S_e:
+         P, Pb, Pu, S = plasma_membrane(s)
+         P_vals.append(P)
+         Pb_vals.append(Pb)
+         Pu_vals.append(Pu)
+         S_vals.append(S)
+    plt.plot(S_e, P_vals, label="P")
+    plt.plot(S_e, Pb_vals, label="P_b")
+    plt.plot(S_e, Pu_vals, label="P_u")
+    plt.plot(S_e, S_vals, label="S")
+
+    plt.legend()
+    plt.xlabel("S_e")
+    plt.show()
+
+
+def plot_plasma_noS():
+    S_range = np.linspace(0.001, 1, 1000)
+    P_vals = []
+    Pb_vals = []
+    Pu_vals = []
+    S_e = 0.001
+    for s in S_range:
+        P, Pb, Pu = plasma_membrane_noS(S_e, s)
+        P_vals.append(P)
+        Pb_vals.append(Pb)
+        Pu_vals.append(Pu)
+
+    plt.plot(S_range, P_vals, label="P")
+    plt.plot(S_range, Pb_vals, label="P_b")
+    plt.plot(S_range, Pu_vals, label="P_u")
+
+    plt.legend()
+    plt.xlabel("S")
+    plt.title(f"S_e = {S_e}")
+    plt.show()
+
+
+if __name__ == '__main__':
+    plot_plasma_noS()
+    plot_plasma_membrane()
