@@ -78,7 +78,7 @@ def plot_FM():
         plt.plot(t_range, FM_sol[:, 3], 'm')
         plt.plot(t_range, FM_sol[:, 4], 'orange')
         plt.plot(t_range, FM_sol[:, 5], 'k')
-        plt.plot(t_range, FM_sol[:, 6], 'y')
+        plt.plot(t_range, FM_sol[:, 6], 'pink')
         plt.title(f"S_e = {S_e}")
 
     plt.legend(["PM Unbound", "PM Bound", "PM ubiq.", "End. Unbound", "End. Bound", "End. ubiq.",
