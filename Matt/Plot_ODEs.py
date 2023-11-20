@@ -46,8 +46,8 @@ W = 32
 v_max = 8.8 * 10 ** 3
 K_m = 2.5
 V = 523
-t_range = np.linspace(0, 10000, 100000)
-Se_vals = [0.01, 0.1, 0.15, 0.25, 0.35, 0.7]
+t_range = np.linspace(0, 150000, 100000)
+Se_vals = [0.01, 0.1, 0.15, 0.35, 0.7, 0.9]
 
 
 def plot_PM():
@@ -56,11 +56,12 @@ def plot_PM():
         plt.subplot(3, 2, i + 1)
         PM_sol = odeint(plasma_membrane, y0=[50, 0, 0, 0], t=t_range, args=(y, k, S_e, W, j, a, z, v_max, V, K_m))
 
-        plt.plot(t_range, PM_sol[:, 0], 'b')
+        plt.plot(t_range, PM_sol[:, 0], 'b-')
         plt.plot(t_range, PM_sol[:, 1], 'r')
         plt.plot(t_range, PM_sol[:, 2], 'g')
-        plt.plot(t_range, PM_sol[:, 3], 'm')
+        plt.plot(t_range, PM_sol[:, 3], 'm--')
         plt.title(f"S_e = {S_e}")
+        plt.xlabel("t")
 
     plt.legend(["PM Unbound", "PM Bound", "PM ubiq.", "Intracellular Uracil"])
     plt.tight_layout()
@@ -91,4 +92,4 @@ def plot_FM():
 
 # S_e ranges between 0 and 5 - Dr. Dixon
 if __name__ == '__main__':
-    plot_PM()
+    plot_FM()
