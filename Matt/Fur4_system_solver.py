@@ -23,7 +23,7 @@ def solve_four_system():
     equations = [
         y - k*E*P - (k/W)*S*P + j*B,
         k*E*P + (k/W) * S * P - j*B - a*B,
-        a*B - z*U,
+        a*B - z*U
     ]
     return solve(equations, [P, B, U])
 
@@ -56,6 +56,19 @@ def solve_full_model():
     ]
     return solve(equations, [P, B, U, E, nu, zeta])
 
+def solve_full_model_new():
+    from sympy.abc import y, k, alpha, P, W, S, j, B, f, e, p, a, z, E, g, U, b, zeta, nu
+
+    equations = [
+        y - k*alpha*P - (k/W)*S*P + j*B + f*(e/p)*E,  # dP/dt
+        k*alpha*P + (k/W)*S*P - j*B - a*B,  # dP_b/dt
+        a*B - g*U,  # dP_u/dt
+        b * zeta - (k / W) * S * E + j * nu - f * E,  # dE/dt
+        (k / W) * S * E - j * nu - a * nu,  # dE_b/dt
+        g*(p/e)*U - b*zeta + a*nu - z*zeta  # dE_u/dt
+    ]
+    return solve(equations, [P, B, U, E, nu, zeta])
+
 
 def main():
     """This function is used to print in appealing format."""
@@ -75,4 +88,5 @@ def main():
 
 
 if __name__ == '__main__':
+    print(solve_four_system())
     main()
