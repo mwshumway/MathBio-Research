@@ -46,7 +46,7 @@ W = 32
 v_max = 8.8 * 10 ** 3
 K_m = 2.5
 V = 523
-t_range = np.linspace(0, 150000, 100000)
+t_range = np.linspace(0, 2000, 100000)
 Se_vals = [0.01, 0.1, 0.15, 0.35, 0.7, 0.9]
 
 
@@ -92,4 +92,4 @@ def plot_FM():
 
 # S_e ranges between 0 and 5 - Dr. Dixon
 if __name__ == '__main__':
-    plot_FM()
+    plot_PM()
