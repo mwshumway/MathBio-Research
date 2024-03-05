@@ -46,50 +46,56 @@ W = 32
 v_max = 8.8 * 10 ** 3
 K_m = 2.5
 V = 523
-t_range = np.linspace(0, 2000, 100000)
-Se_vals = [0.01, 0.1, 0.15, 0.35, 0.7, 0.9]
+t_range = np.linspace(0, 8000, 100000)
+Se_vals = [.01, .1, 1]
 
 
-def plot_PM():
-    # Plasma Membrane Only
-    for i, S_e in enumerate(Se_vals):
-        plt.subplot(3, 2, i + 1)
-        PM_sol = odeint(plasma_membrane, y0=[50, 0, 0, 0], t=t_range, args=(y, k, S_e, W, j, a, z, v_max, V, K_m))
+def plot_PM(Se1=.01, Se2=.1):
+    plt.figure(figsize=(8,8))
+    time = np.linspace(30000, 60000, 1000000)
+    time1 = time[:len(time)//2]
+    time2 = time[len(time)//2:]
+    PM_sol1 = odeint(plasma_membrane, y0=[50, 0, 0, 0], t=time1, args=(y, k, Se1, W, j, a, z, v_max, V, K_m))
+    PM_sol2 = odeint(plasma_membrane, y0=PM_sol1[-1], t=time2, args=(y, k, Se2, W, j, a, z, v_max, V, K_m))
 
-        plt.plot(t_range, PM_sol[:, 0], 'b-')
-        plt.plot(t_range, PM_sol[:, 1], 'r')
-        plt.plot(t_range, PM_sol[:, 2], 'g')
-        plt.plot(t_range, PM_sol[:, 3], 'm--')
-        plt.title(f"S_e = {S_e}")
-        plt.xlabel("t")
+    PM_sol = np.vstack((PM_sol1, PM_sol2))
 
-    plt.legend(["PM Unbound", "PM Bound", "PM ubiq.", "Intracellular Uracil"])
-    plt.tight_layout()
+    plt.plot(time, PM_sol[:, 0], label=r"$P$")
+    plt.plot(time, PM_sol[:, 1], label=r"$P_b$")
+    plt.plot(time, PM_sol[:, 2], label=r"$P_u$")
+    plt.plot(time, PM_sol[:, 3], label=r"$S$")
+
+    plt.legend()
+    plt.title(rf"$Se_1$={Se1}, Se_2 = {Se2}")
+    plt.ylim((0, .2))
     plt.show()
 
 
-def plot_FM():
+def plot_FM(Se1=.01, Se2=.1):
     # Full Model
-    y0 = [1, 0, 0, 0, 0, 0, 0]
-    for i, S_e in enumerate(Se_vals):
-        plt.subplot(3, 2, i + 1)
-        FM_sol = odeint(full_model, y0, t=t_range, args=(y, k, S_e, W, j, f, A_e, A_p, a, g, b,
-                                                         z, v_max, V, K_m))
-        plt.plot(t_range, FM_sol[:, 0], 'b')
-        plt.plot(t_range, FM_sol[:, 1], 'r')
-        plt.plot(t_range, FM_sol[:, 2], 'g')
-        plt.plot(t_range, FM_sol[:, 3], 'm')  # dE/dt
-        plt.plot(t_range, FM_sol[:, 4], 'orange')
-        plt.plot(t_range, FM_sol[:, 5], 'k')
-        plt.plot(t_range, FM_sol[:, 6], 'pink')
-        plt.title(f"S_e = {S_e}")
+    plt.figure(figsize=(8, 8))
+    time = np.linspace(1e2, 1e6, 1000000)
+    time1 = time[:len(time) // 2]
+    time2 = time[len(time) // 2:]
+    FM_sol1 = odeint(full_model, y0=[50, 0, 0, 0, 0, 0, 0], t=time1, args=(y, k, Se1, W, j, f, A_e, A_p, a, g, b, z, v_max, V, K_m))
+    FM_sol2 = odeint(full_model, y0=FM_sol1[-1], t=time2, args=(y, k, Se2, W, j, f, A_e, A_p, a, g, b, z, v_max, V, K_m))
 
-    plt.legend(["PM Unbound", "PM Bound", "PM ubiq.", "End. Unbound", "End. Bound", "End. ubiq.",
-                "Intracellular Uracil"])
-    plt.tight_layout()
+    FM_sol = np.vstack((FM_sol1, FM_sol2))
+
+    plt.plot(time, FM_sol[:, 0], 'b', label=r"P")
+    plt.plot(time, FM_sol[:, 1], 'r', label=r"P_b")
+    plt.plot(time, FM_sol[:, 2], 'g', label=r"P_u")
+    plt.plot(time, FM_sol[:, 3], 'm', label=r"E")  # dE/dt
+    plt.plot(time, FM_sol[:, 4], 'orange', label=r"E_b")
+    plt.plot(time, FM_sol[:, 5], 'k', label=r"E_u")
+    plt.plot(time, FM_sol[:, 6], 'pink', label=r"S")
+    plt.title(rf"$Se_1$={Se1}, Se_2 = {Se2}")
+    plt.legend()
+
+    plt.ylim((0, 4))
     plt.show()
 
 
-# S_e ranges between 0 and 5 - Dr. Dixon
 if __name__ == '__main__':
     plot_PM()
+    plot_FM()

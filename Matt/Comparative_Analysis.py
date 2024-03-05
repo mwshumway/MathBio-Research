@@ -97,7 +97,7 @@ def eval_fm_alg(S, S_e, a=1, b=1, A_p=314, j=100, k=100 / 0.74, W=32, y=0.000083
 # E_b_fm = lambda S, a: A_p * S * b * k * y / (A_e * S * a * k * z + A_e * W * a * f * z + A_e * W * f * j * z)
 
 
-def E_u_fm_eval(A_p=314,y=0.000083, z=0.002, A_e=47):
+def E_u_fm_eval(A_p=314, y=0.000083, z=0.002, A_e=47):
     return A_p * y / (A_e * z)
 
 
@@ -133,13 +133,13 @@ def steady_S_bisect(Se, a=1, b=1, A_p=314, j=100, K_m=2.5, k=100 / 0.74, V_m=8.8
                     z=0.002, f=0.1, A_e=47):
     """Use bisection method to get steady state of S"""
     dSdt = lambda S: -(k / W) * S * (
-                (A_p / V) * P_fm_eval(S, Se, a, b, A_p, j) + (
-                    A_e / V) * E_fm_eval(S, a, b, A_p, j, k, W, y, z, f, A_e)) + (j + a) * (
+            (A_p / V) * P_fm_eval(S, Se, a, b, A_p, j) + (
+            A_e / V) * E_fm_eval(S, a, b, A_p, j, k, W, y, z, f, A_e)) + (j + a) * (
                              (A_p / V) * P_b_fm_eval(S, a, b, j, k, W, y, z, f) + (A_e / V) * E_b_fm_eval(S, a, b, A_p,
                                                                                                           j, k, W, y, z,
                                                                                                           f,
                                                                                                           A_e)) - V_m * S / (
-                                 V * (K_m + S))
+                             V * (K_m + S))
     return opt.bisect(dSdt, 0, 1)
 
 
@@ -185,19 +185,21 @@ def comparison_extracellular_uracil():
         percent_intr.append(S_i / intracellular_uracil[0])
 
     plt.subplot(221)
-    plt.plot(Se_vals, total_pm_fur4, 'r', label="Total P.M. Fur4")
-    plt.plot(Se_vals, total_end_fur4, 'purple', label="Total Endosomal Fur4")
-    plt.plot(Se_vals, [p + q for p, q in zip(total_end_fur4, total_pm_fur4)], 'k', label="Total Fur4")
-    plt.title("Full Model Steady States", fontsize=10)
+    plt.plot(Se_vals, total_pm_fur4, 'r', label="Total P.M. Fur4", linewidth=5)
+    plt.plot(Se_vals, total_end_fur4, 'purple', label="Total Endosomal Fur4", linewidth=5)
+    plt.plot(Se_vals, [p + q for p, q in zip(total_end_fur4, total_pm_fur4)], 'k', label="Total Fur4", linewidth=5)
+    plt.title("Full Model Steady States", fontsize=20)
     plt.legend()
-    plt.xlabel("Extracellular Uracil")
-    plt.ylabel("Total Fur4")
+    plt.xlabel("Extracellular Uracil", fontsize=15)
+    plt.ylabel("Total Fur4", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(222)
-    plt.plot(Se_vals, intracellular_uracil)
-    plt.title("Full Model Steady States", fontsize=10)
-    plt.xlabel("Extracellular Uracil")
-    plt.ylabel("Intracellular Uracil")
+    plt.plot(Se_vals, intracellular_uracil, linewidth=5)
+    plt.title("Full Model Steady States", fontsize=20)
+    plt.xlabel("Extracellular Uracil", fontsize=15)
+    plt.ylabel("Intracellular Uracil", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     # plt.subplot(423)
     # plt.plot(Se_vals, percent_pm_fur4, 'r', label=r"$\frac{P.M. Fur4}{initial P.M. Fur4}$")
@@ -217,15 +219,17 @@ def comparison_extracellular_uracil():
     # Plasma Membrane Only Model
     plt.subplot(223)
     total_fur4 = P_pm_eval(S_e=Se_vals) + P_b_pm_eval() + P_u_pm_eval()
-    plt.plot(Se_vals, total_fur4, 'r')
-    plt.xlabel("Extracellular Uracil")
-    plt.ylabel("Total Fur4")
-    plt.title("Plasma Membrane Only Model Steady States", fontsize=10)
+    plt.plot(Se_vals, total_fur4, 'r', linewidth=5)
+    plt.xlabel("Extracellular Uracil", fontsize=15)
+    plt.ylabel("Total Fur4", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
+    plt.title("P.M. Model Steady States", fontsize=20)
     plt.subplot(224)
-    plt.plot(Se_vals, S_pm_eval(S_e=Se_vals))
-    plt.xlabel("Extracellular Uracil")
-    plt.ylabel("Intracellular Uracil")
-    plt.title("Plasma Membrane Only Model Steady States", fontsize=10)
+    plt.plot(Se_vals, S_pm_eval(S_e=Se_vals), linewidth=5)
+    plt.xlabel("Extracellular Uracil", fontsize=15)
+    plt.ylabel("Intracellular Uracil", fontsize=15)
+    plt.title("P.M Model Steady States", fontsize=20)
+    plt.locator_params(axis='both', nbins=4)
 
     # plt.subplot(427)
     # plt.plot(Se_vals, total_fur4 / total_fur4[0])
@@ -257,7 +261,7 @@ def comparison_ubiq_rate():
     A_e = 47
     g = 0.1
 
-    s_e = 1  # fix extracellular uracil level
+    s_e = .1  # fix extracellular uracil level
     ubiq_rate = np.linspace(0.01, 2, 250)  # range of ubiquitination rates
 
     def eval_fm_alg(S, ub_r, S_e):
@@ -303,9 +307,9 @@ def comparison_ubiq_rate():
     total_intra_uracil = []
     for ur in ubiq_rate:
         dSdt_ur = lambda S: -(k / W) * S * ((A_p / V) * P_fm_eval(S, s_e, a=ur) + (A_e / V) * E_fm_eval(S, a=ur)) + (
-                    j + ur) * (
+                j + ur) * (
                                     (A_p / V) * P_b_fm_eval(S, a=ur) + (A_e / V) * E_b_fm_eval(S, a=ur)) - V_m * S / (
-                                        V * (K_m + S))
+                                    V * (K_m + S))
         S_i = opt.bisect(dSdt_ur, -1e-10, 1e10)
         total_intra_uracil.append(S_i)
         fur4 = eval_fm_alg(S_i, ur, s_e)
@@ -313,19 +317,21 @@ def comparison_ubiq_rate():
         total_end_fur4.append(fur4[3] + fur4[4] + fur4[5])
 
     plt.subplot(221)
-    plt.plot(ubiq_rate, total_end_fur4, 'purple', label="Total Endosomal Fur4")
-    plt.plot(ubiq_rate, total_pm_fur4, 'red', label="Total P.M. Fur4")
-    plt.plot(ubiq_rate, [p + q for p, q in zip(total_end_fur4, total_pm_fur4)], 'k', label="Total Fur4")
-    plt.title(fr"Full Model Steady States, $S_e={s_e}$", fontsize=10)
+    plt.plot(ubiq_rate, total_end_fur4, 'purple', label="Total Endosomal Fur4", linewidth=5)
+    plt.plot(ubiq_rate, total_pm_fur4, 'red', label="Total P.M. Fur4", linewidth=5)
+    plt.plot(ubiq_rate, [p + q for p, q in zip(total_end_fur4, total_pm_fur4)], 'k', label="Total Fur4", linewidth=5)
+    plt.title(fr"Full Steady States, $S_e={s_e}$", fontsize=20)
     plt.legend()
-    plt.xlabel("Ubiquitination Rate")
-    plt.ylabel("Total Fur4")
+    plt.xlabel("Ubiquitination Rate", fontsize=15)
+    plt.ylabel("Total Fur4", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(222)
-    plt.plot(ubiq_rate, total_intra_uracil)
-    plt.title(fr"Full Model Steady States, $S_e={s_e}$", fontsize=10)
-    plt.xlabel("Ubiquitination Rate")
-    plt.ylabel("Intracellular Uracil")
+    plt.plot(ubiq_rate, total_intra_uracil, linewidth=5)
+    plt.title(fr"Full Steady States, $S_e={s_e}$", fontsize=20)
+    plt.xlabel("Ubiquitination Rate", fontsize=15)
+    plt.ylabel("Intracellular Uracil", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     total_fur4_pm_model = []
     total_uracil_pm = []
@@ -335,17 +341,19 @@ def comparison_ubiq_rate():
         total_uracil_pm.append(f4[-1])
 
     plt.subplot(223)
-    plt.plot(ubiq_rate, total_fur4_pm_model, 'r', label="Total Fur4")
-    plt.title(fr"Plasma Membrane Only Steady States, $S_e={s_e}$", fontsize=10)
+    plt.plot(ubiq_rate, total_fur4_pm_model, 'r', label="Total Fur4", linewidth=5)
+    plt.title(fr"P.M. Steady States, $S_e={s_e}$", fontsize=20)
     plt.legend()
-    plt.xlabel("Ubiquitination Rate")
-    plt.ylabel("Total Fur4")
+    plt.xlabel("Ubiquitination Rate", fontsize=15)
+    plt.ylabel("Total Fur4", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(224)
-    plt.plot(ubiq_rate, total_uracil_pm)
-    plt.title(fr"Plasma Membrane Only Steady States, $S_e={s_e}$", fontsize=10)
-    plt.xlabel("Ubiquitination Rate")
-    plt.ylabel("Intracellular Uracil")
+    plt.plot(ubiq_rate, total_uracil_pm, linewidth=5)
+    plt.title(fr"P.M. Steady States, $S_e={s_e}$", fontsize=20)
+    plt.xlabel("Ubiquitination Rate", fontsize=15)
+    plt.ylabel("Intracellular Uracil", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.tight_layout()
     plt.show()
@@ -353,7 +361,7 @@ def comparison_ubiq_rate():
 
 def comparison_recycling_rate():
     """Alter j, the recycling rate of Fur4 to Plasma Membrane"""
-    S_e = 1  # fix extracellular uracil
+    S_e = .1  # fix extracellular uracil
     a = 1  # fix ubiquitination rate
     b = 1
     A_p = 314
@@ -397,20 +405,21 @@ def comparison_recycling_rate():
     total = np.array(pm_fur4) + np.array(end_fur4)
 
     plt.subplot(121)
-    plt.plot(recycle_rate, pm_fur4, "r", label="Total P.M. Fur4")
-    plt.plot(recycle_rate, end_fur4, 'purple', label="Total Endosomal Fur4")
-    plt.plot(recycle_rate, total, "k", label="Total Fur4")
-    plt.xlabel("Recycling Rate of Fur4 to Plasma Membrane")
-    plt.ylabel("Fur4 Concentration")
-    plt.title(fr"Full Model Steady States, $S_e={S_e}$")
+    plt.plot(recycle_rate, pm_fur4, "r", label="Total P.M. Fur4", linewidth=4)
+    plt.plot(recycle_rate, end_fur4, 'purple', label="Total Endosomal Fur4", linewidth=4)
+    plt.plot(recycle_rate, total, "k", label="Total Fur4", linewidth=4)
+    plt.xlabel("Recycling Rate of Fur4 to P.M.", fontsize=15)
+    plt.ylabel("Fur4 Concentration", fontsize=15)
+    plt.title(fr"Full Steady States, $S_e={S_e}$", fontsize=20)
     plt.legend()
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(122)
-    plt.plot(recycle_rate, intra_uracil)
-    plt.ylabel("Intracellular Uracil Concentration")
-    plt.xlabel("Recycling Rate of Fur4 to Plasma Membrane")
-    plt.title(fr"Full Model Steady States, $S_e={S_e}$")
-
+    plt.plot(recycle_rate, intra_uracil, linewidth=4)
+    plt.ylabel("Intracellular Uracil Concentration", fontsize=15)
+    plt.xlabel("Recycling Rate of Fur4 to P.M.", fontsize=15)
+    plt.title(fr"Full Steady States, $S_e={S_e}$", fontsize=20)
+    plt.locator_params(axis='both', nbins=4)
 
     # plt.subplot(223)
     # plt.plot(recycle_rate, percent_pm_fur4, "r", label="P.M. Fur4")
@@ -427,7 +436,6 @@ def comparison_recycling_rate():
     # plt.xlabel("Recycling Rate of Fur4 to Plasma Membrane")
     # plt.ylabel("Percentage of Initial")
 
-
     # Parameter f has no effect on the Plasma Membrane Only Model, so there is no point graphing it.
 
     plt.tight_layout()
@@ -435,7 +443,7 @@ def comparison_recycling_rate():
 
 
 def comparison_endocytosis_rate():
-    S_e = 0.01  # fix extracellular uracil
+    S_e = 0.1  # fix extracellular uracil
     a = 1  # fix ubiquitination rate
     b = 1
     A_p = 314
@@ -479,19 +487,21 @@ def comparison_endocytosis_rate():
     total = np.array(pm_fur4) + np.array(end_fur4)
 
     plt.subplot(121)
-    plt.plot(endocytos_rate, pm_fur4, "r", label="Total P.M. Fur4")
-    plt.plot(endocytos_rate, end_fur4, 'purple', label="Total Endosomal Fur4")
-    plt.plot(endocytos_rate, total, "k", label="Total Fur4")
-    plt.xlabel("Endocytosis Rate")
-    plt.ylabel("Fur4 Concentration")
-    plt.title(fr"Full Model Steady State, $S_e={S_e}$")
+    plt.plot(endocytos_rate, pm_fur4, "r", label="Total P.M. Fur4", linewidth=3)
+    plt.plot(endocytos_rate, end_fur4, 'purple', label="Total Endosomal Fur4", linewidth=3)
+    plt.plot(endocytos_rate, total, "k", label="Total Fur4", linewidth=3)
+    plt.xlabel("Endocytosis Rate", fontsize=15)
+    plt.ylabel("Fur4 Concentration", fontsize=15)
+    plt.title(fr"Full Steady State, $S_e={S_e}$", fontsize=20)
     plt.legend()
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(122)
-    plt.plot(endocytos_rate, intra_uracil)
-    plt.ylabel("Intracellular Uracil Concentration")
-    plt.xlabel("Endocytosis Rate")
-    plt.title(fr"Full Model Steady State, $S_e={S_e}$")
+    plt.plot(endocytos_rate, intra_uracil, linewidth=3)
+    plt.ylabel("Intracellular Uracil Concentration", fontsize=15)
+    plt.xlabel("Endocytosis Rate", fontsize=15)
+    plt.title(fr"Full Steady State, $S_e={S_e}$", fontsize=20)
+    plt.locator_params(axis='both', nbins=4)
 
     # plt.subplot(223)
     # plt.plot(endocytos_rate, percent_pm_fur4, "r", label="P.M. Fur4")
@@ -514,7 +524,7 @@ def comparison_endocytosis_rate():
 
 
 def comparison_deubiq_rate():
-    S_e = 1  # fix extracellular uracil
+    S_e = .1  # fix extracellular uracil
     a = 1  # fix ubiquitination rate
     # b = 1  We change b, the de-ubiquitination rate
     A_p = 314
@@ -558,20 +568,21 @@ def comparison_deubiq_rate():
     total = np.array(pm_fur4) + np.array(end_fur4)
 
     plt.subplot(121)
-    plt.plot(deubiq_rate, pm_fur4, "r", label="Total P.M. Fur4")
-    plt.plot(deubiq_rate, end_fur4, 'purple', label="Total Endosomal Fur4")
-    plt.plot(deubiq_rate, total, "k", label="Total Fur4")
-    plt.xlabel("De-Ubiquitination Rate")
-    plt.ylabel("Fur4 Concentration")
-    plt.title(fr"Full Model Steady State, $S_e={S_e}$")
+    plt.plot(deubiq_rate, pm_fur4, "r", label="Total P.M. Fur4", linewidth=5)
+    plt.plot(deubiq_rate, end_fur4, 'purple', label="Total Endosomal Fur4", linewidth=5)
+    plt.plot(deubiq_rate, total, "k", label="Total Fur4", linewidth=5)
+    plt.xlabel("Deubiquitination Rate", fontsize=15)
+    plt.ylabel("Fur4 Concentration", fontsize=15)
+    plt.title(fr"Full Steady State, $S_e={S_e}$", fontsize=20)
     plt.legend()
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(122)
-    plt.plot(deubiq_rate, intra_uracil)
-    plt.ylabel("Intracellular Uracil Concentration")
-    plt.title(fr"Full Model Steady State, $S_e={S_e}$")
-    plt.xlabel("De-Ubiquitination Rate")
-
+    plt.plot(deubiq_rate, intra_uracil, linewidth=5)
+    plt.ylabel("Intracellular Uracil Concentration", fontsize=15)
+    plt.title(fr"Full Steady State, $S_e={S_e}$", fontsize=20)
+    plt.xlabel("Deubiquitination Rate", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     plasma_fur4 = []
     plasma_uracil = []
@@ -603,7 +614,7 @@ def comparison_unbinding_rate():
     """We alter j, the unbinding rate of uracil/fur4"""
     plt.figure(figsize=(10, 10))
 
-    S_e = 1  # fix extracellular uracil
+    S_e = .1  # fix extracellular uracil
     a = 1
     b = 1
     A_p = 314
@@ -626,9 +637,11 @@ def comparison_unbinding_rate():
     pm_fur4, pm_ex_ur = [], []
     for ubr in unbinding_rate:
         k = ubr / K_d
-        dSdt_ur = lambda S: -(k / W) * S * ((A_p / V) * P_fm_eval(S, S_e, j=ubr, k=k) + (A_e / V) * E_fm_eval(S, j=ubr, k=k)) + (
-                ubr + a) * (
-                                    (A_p / V) * P_b_fm_eval(S, j=ubr, k=k) + (A_e / V) * E_b_fm_eval(S, j=ubr, k=k)) - V_m * S / (
+        dSdt_ur = lambda S: -(k / W) * S * (
+                (A_p / V) * P_fm_eval(S, S_e, j=ubr, k=k) + (A_e / V) * E_fm_eval(S, j=ubr, k=k)) + (
+                                    ubr + a) * (
+                                    (A_p / V) * P_b_fm_eval(S, j=ubr, k=k) + (A_e / V) * E_b_fm_eval(S, j=ubr,
+                                                                                                     k=k)) - V_m * S / (
                                     V * (K_m + S))
         S_i = opt.bisect(dSdt_ur, 0, 50)
         fm_ex_ur.append(S_i)
@@ -638,33 +651,36 @@ def comparison_unbinding_rate():
         pm_ex_ur.append(S_pm_eval(S_e, j=ubr))
 
     plt.subplot(221)
-    plt.plot(unbinding_rate, fm_pm_fur4, "r", label="Total P.M. Fur4")
-    plt.plot(unbinding_rate, fm_end_fur4, 'purple', label="Total Endosomal Fur4")
-    plt.plot(unbinding_rate, [x + y for x,y in zip(fm_pm_fur4, fm_end_fur4)], "k", label="Total Fur4")
-    plt.xlabel("Unbinding Uracil/Fur4 Rate")
-    plt.ylabel("Fur4 Concentration")
-    plt.title(fr"Full Model Steady State, $S_e={S_e}$")
+    plt.plot(unbinding_rate, fm_pm_fur4, "r", label="Total P.M. Fur4", linewidth=5)
+    plt.plot(unbinding_rate, fm_end_fur4, 'purple', label="Total Endosomal Fur4", linewidth=5)
+    plt.plot(unbinding_rate, [x + y for x, y in zip(fm_pm_fur4, fm_end_fur4)], "k", label="Total Fur4", linewidth=5)
+    plt.xlabel("Unbinding Uracil/Fur4 Rate", fontsize=15)
+    plt.ylabel("Fur4 Concentration", fontsize=15)
+    plt.title(fr"Full Steady State, $S_e={S_e}$", fontsize=20)
     plt.legend()
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(222)
-    plt.plot(unbinding_rate, fm_ex_ur)
-    plt.ylabel("Intracellular Uracil Concentration")
-    plt.title(fr"Full Model Steady State, $S_e={S_e}$")
-    plt.xlabel("Unbinding Uracil/Fur4 Rate")
+    plt.plot(unbinding_rate, fm_ex_ur, linewidth=5)
+    plt.ylabel("Intracellular Uracil Concentration", fontsize=15)
+    plt.title(fr"Full Steady State, $S_e={S_e}$", fontsize=20)
+    plt.xlabel("Unbinding Uracil/Fur4 Rate", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(223)
-    plt.plot(unbinding_rate, pm_fur4)
-    plt.xlabel("Unbinding Uracil/Fur4 Rate")
-    plt.ylabel("Fur4 Concentration")
-    plt.title(fr"PM Model Steady State, $S_e={S_e}$")
+    plt.plot(unbinding_rate, pm_fur4, linewidth=5)
+    plt.xlabel("Unbinding Uracil/Fur4 Rate", fontsize=15)
+    plt.ylabel("Fur4 Concentration", fontsize=15)
+    plt.title(fr"PM Model Steady State, $S_e={S_e}$", fontsize=20)
     plt.ylim((0, 0.1))
-
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(224)
-    plt.plot(unbinding_rate, pm_ex_ur)
-    plt.ylabel("Intracellular Uracil Concentration")
-    plt.title(fr"PM Steady State, $S_e={S_e}$")
-    plt.xlabel("Unbinding Uracil/Fur4 Rate")
+    plt.plot(unbinding_rate, pm_ex_ur, linewidth=5)
+    plt.ylabel("Intracellular Uracil Concentration", fontsize=15)
+    plt.title(fr"PM Steady State, $S_e={S_e}$", fontsize=20)
+    plt.xlabel("Unbinding Uracil/Fur4 Rate", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.tight_layout()
     plt.show()
@@ -673,7 +689,7 @@ def comparison_unbinding_rate():
 def comparison_prod_rate():
     plt.figure(figsize=(10, 10))
 
-    S_e = .01  # fix extracellular uracil
+    S_e = .1  # fix extracellular uracil
     a = 1
     b = 1
     A_p = 314
@@ -695,7 +711,7 @@ def comparison_prod_rate():
     pm_fur4, pm_ex_ur = [], []
     for pr in prod_rate:
         dSdt_ur = lambda S: -(k / W) * S * (
-                    (A_p / V) * P_fm_eval(S, S_e, y=pr) + (A_e / V) * E_fm_eval(S, y=pr)) + (
+                (A_p / V) * P_fm_eval(S, S_e, y=pr) + (A_e / V) * E_fm_eval(S, y=pr)) + (
                                     j + a) * (
                                     (A_p / V) * P_b_fm_eval(S, y=pr) + (A_e / V) * E_b_fm_eval(S, y=pr)) - V_m * S / (
                                     V * (K_m + S))
@@ -707,31 +723,35 @@ def comparison_prod_rate():
         pm_ex_ur.append(S_pm_eval(S_e, y=pr))
 
     plt.subplot(221)
-    plt.plot(prod_rate, fm_pm_fur4, "r", label="Total P.M. Fur4")
-    plt.plot(prod_rate, fm_end_fur4, 'purple', label="Total Endosomal Fur4")
-    plt.plot(prod_rate, [x + y for x, y in zip(fm_pm_fur4, fm_end_fur4)], "k", label="Total Fur4")
-    plt.xlabel("Fur4 Production Rate")
-    plt.ylabel("Fur4 Concentration")
-    plt.title(fr"Full Model Steady State, $S_e={S_e}$")
+    plt.plot(prod_rate, fm_pm_fur4, "r", label="Total P.M. Fur4", linewidth=5)
+    plt.plot(prod_rate, fm_end_fur4, 'purple', label="Total Endosomal Fur4", linewidth=5)
+    plt.plot(prod_rate, [x + y for x, y in zip(fm_pm_fur4, fm_end_fur4)], "k", label="Total Fur4", linewidth=5)
+    plt.xlabel("Fur4 Production Rate", fontsize=15)
+    plt.ylabel("Fur4 Concentration", fontsize=15)
+    plt.title(fr"Full Steady State, $S_e={S_e}$", fontsize=20)
     plt.legend()
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(222)
-    plt.plot(prod_rate, fm_ex_ur)
-    plt.ylabel("Intracellular Uracil Concentration")
-    plt.title(fr"Full Model Steady State, $S_e={S_e}$")
-    plt.xlabel("Fur4 Production Rate")
+    plt.plot(prod_rate, fm_ex_ur, linewidth=5)
+    plt.ylabel("Intracellular Uracil Concentration", fontsize=15)
+    plt.title(fr"Full Steady State, $S_e={S_e}$", fontsize=20)
+    plt.xlabel("Fur4 Production Rate", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(223)
-    plt.plot(prod_rate, pm_fur4)
-    plt.xlabel("Fur4 Production Rate")
-    plt.ylabel("Fur4 Concentration")
-    plt.title(fr"PM Model Steady State, $S_e={S_e}$")
+    plt.plot(prod_rate, pm_fur4, linewidth=5)
+    plt.xlabel("Fur4 Production Rate", fontsize=15)
+    plt.ylabel("Fur4 Concentration", fontsize=15)
+    plt.title(fr"PM Steady State, $S_e={S_e}$", fontsize=20)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(224)
-    plt.plot(prod_rate, pm_ex_ur)
-    plt.ylabel("Intracellular Uracil Concentration")
-    plt.title(fr"PM Steady State, $S_e={S_e}$")
-    plt.xlabel("Fur4 Production Rate")
+    plt.plot(prod_rate, pm_ex_ur, linewidth=5)
+    plt.ylabel("Intracellular Uracil Concentration", fontsize=15)
+    plt.title(fr"PM Steady State, $S_e={S_e}$", fontsize=20)
+    plt.xlabel("Fur4 Production Rate", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.tight_layout()
     plt.show()
@@ -740,7 +760,7 @@ def comparison_prod_rate():
 def compare_degredation_rate():
     plt.figure(figsize=(10, 10))
 
-    S_e = 1  # fix extracellular uracil
+    S_e = .1  # fix extracellular uracil
     a = 1
     b = 1
     A_p = 314
@@ -774,52 +794,202 @@ def compare_degredation_rate():
         pm_ex_ur.append(S_pm_eval(S_e))
 
     plt.subplot(221)
-    plt.plot(deg_rate, fm_pm_fur4, "r", label="Total P.M. Fur4")
-    plt.plot(deg_rate, fm_end_fur4, 'purple', label="Total Endosomal Fur4")
-    plt.plot(deg_rate, [x + y for x, y in zip(fm_pm_fur4, fm_end_fur4)], "k", label="Total Fur4")
-    plt.xlabel("Fur4 Degradation Rate")
-    plt.ylabel("Fur4 Concentration")
-    plt.title(fr"Full Model Steady State, $S_e={S_e}$")
+    plt.plot(deg_rate, fm_pm_fur4, "r", label="Total P.M. Fur4", linewidth=5)
+    plt.plot(deg_rate, fm_end_fur4, 'purple', label="Total Endosomal Fur4", linewidth=4)
+    plt.plot(deg_rate, [x + y for x, y in zip(fm_pm_fur4, fm_end_fur4)], "k", label="Total Fur4", linewidth=4)
+    plt.xlabel("Fur4 Degradation Rate", fontsize=15)
+    plt.ylabel("Fur4 Concentration", fontsize=15)
+    plt.title(fr"Full Steady State, $S_e={S_e}$", fontsize=20)
     plt.legend()
     plt.locator_params(axis='x', nbins=5)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(222)
-    plt.plot(deg_rate, fm_ex_ur)
-    plt.ylabel("Intracellular Uracil Concentration")
-    plt.title(fr"Full Model Steady State, $S_e={S_e}$")
-    plt.xlabel("Fur4 Degradation Rate")
-    plt.locator_params(axis='x', nbins=5)
+    plt.plot(deg_rate, fm_ex_ur, linewidth=5)
+    plt.ylabel("Intracellular Uracil Concentration", fontsize=15)
+    plt.title(fr"Full Steady State, $S_e={S_e}$", fontsize=20)
+    plt.xlabel("Fur4 Degradation Rate", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(223)
-    plt.plot(deg_rate, pm_fur4)
-    plt.xlabel("Fur4 Degradation Rate")
-    plt.ylabel("Fur4 Concentration")
-    plt.title(fr"PM Model Steady State, $S_e={S_e}$")
-    plt.locator_params(axis='x', nbins=5)
+    plt.plot(deg_rate, pm_fur4, linewidth=5)
+    plt.xlabel("Fur4 Degradation Rate", fontsize=15)
+    plt.ylabel("Fur4 Concentration", fontsize=15)
+    plt.title(fr"PM Model Steady State, $S_e={S_e}$", fontsize=20)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.subplot(224)
-    plt.plot(deg_rate, pm_ex_ur)
-    plt.ylabel("Intracellular Uracil Concentration")
-    plt.title(fr"PM Steady State, $S_e={S_e}$")
-    plt.xlabel("Fur4 Degradation Rate")
-    plt.locator_params(axis='x', nbins=5)
+    plt.plot(deg_rate, pm_ex_ur, linewidth=5)
+    plt.ylabel("Intracellular Uracil Concentration", fontsize=15)
+    plt.title(fr"PM Steady State, $S_e={S_e}$", fontsize=20)
+    plt.xlabel("Fur4 Degradation Rate", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
 
     plt.tight_layout()
     plt.show()
 
 
-def time_series_uracil_jump():
-    pass
+def recycling_rate_individual():
+    """Alter j, the recycling rate of Fur4 to Plasma Membrane"""
+    S_e = .1  # fix extracellular uracil
+    a = 1  # fix ubiquitination rate
+    b = 1
+    A_p = 314
+    j = 10 ** 2
+    K_d = 0.74
+    K_m = 2.5
+    k = j / K_d
+    V_m = 8.8 * 10 ** 3
+    V = 523
+    W = 32
+    y = 0.000083
+    z = .002
+    # f = 0.1  we alter the recycling rate
+    A_e = 47
+    g = 0.1
+
+    plt.figure(figsize=(10, 5))
+
+    # Full Model
+    recycle_rate = np.linspace(0.01, 1)  # change recycling rate of Fur4 to Plasma Membrane
+    pm_fur4 = []
+    percent_pm_fur4 = []
+    E = []
+    Eb = []
+    Eu = []
+    end_fur4 = []
+    percent_end_fur = []
+    intra_uracil = []
+    percent_intra_uracil = []
+    for rr in recycle_rate:
+        dSdt_ur = lambda S: -(k / W) * S * ((A_p / V) * P_fm_eval(S, S_e, f=rr) + (A_e / V) * E_fm_eval(S, f=rr)) + (
+                j + a) * (
+                                    (A_p / V) * P_b_fm_eval(S, f=rr) + (A_e / V) * E_b_fm_eval(S, f=rr)) - V_m * S / (
+                                    V * (K_m + S))
+        S_i = opt.bisect(dSdt_ur, 0, 50)
+        intra_uracil.append(S_i)
+        percent_intra_uracil.append(S_i / intra_uracil[0])
+        pm = P_fm_eval(S_i, S_e, f=rr) + P_b_fm_eval(S_i, f=rr) + P_u_fm_eval(S_i, f=rr)
+        pm_fur4.append(pm)
+        percent_pm_fur4.append(pm / pm_fur4[0])
+        E.append(E_fm_eval(S_i, f=rr))
+        Eb.append(E_b_fm_eval(S_i, f=rr))
+        Eu.append(E_u_fm_eval())
+        end = E_fm_eval(S_i, f=rr) + E_b_fm_eval(S_i, f=rr) + E_u_fm_eval()
+        end_fur4.append(end)
+        percent_end_fur.append(end / end_fur4[0])
+    total = np.array(pm_fur4) + np.array(end_fur4)
+
+    plt.subplot(121)
+    # plt.plot(recycle_rate, pm_fur4, "r", label="Total P.M. Fur4", linewidth=4)
+    # plt.plot(recycle_rate, end_fur4, 'purple', label="Total Endosomal Fur4", linewidth=4)
+    # plt.plot(recycle_rate, total, "k", label="Total Fur4", linewidth=4)
+    plt.plot(recycle_rate, E, label=r"E", linewidth=2)
+    plt.plot(recycle_rate, Eb, label=r"$E_b$", linewidth=2)
+    plt.plot(recycle_rate, Eu, label=r"$E_u$", linewidth=2)
+    plt.xlabel("Recycling Rate of Fur4 to P.M.", fontsize=15)
+    plt.ylabel("Fur4 Concentration", fontsize=15)
+    plt.title(fr"Full Steady States, $S_e={S_e}$", fontsize=20)
+    plt.legend()
+    plt.locator_params(axis='both', nbins=4)
+    plt.ylim((0, 4))
+
+    plt.subplot(122)
+    plt.plot(recycle_rate, intra_uracil, linewidth=4)
+    plt.ylabel("Intracellular Uracil Concentration", fontsize=15)
+    plt.xlabel("Recycling Rate of Fur4 to P.M.", fontsize=15)
+    plt.title(fr"Full Steady States, $S_e={S_e}$", fontsize=20)
+    plt.locator_params(axis='both', nbins=4)
+
+    # Parameter f has no effect on the Plasma Membrane Only Model, so there is no point graphing it.
+
+    plt.tight_layout()
+    plt.show()
 
 
+def vary_deubiq_extra_uracil():
+    # S_e = .1  # fix extracellular uracil
+    a = 1  # fix ubiquitination rate
+    # b = 1  We change b, the de-ubiquitination rate
+    A_p = 314
+    j = 10 ** 2
+    K_d = 0.74
+    K_m = 2.5
+    k = j / K_d
+    V_m = 8.8 * 10 ** 3
+    V = 523
+    W = 32
+    y = 0.000083
+    z = .002
+    f = 0.1
+    A_e = 47
+    # g = 0.1  we alter endocytosis rate
+
+    plt.figure(figsize=(10, 5))
+
+    # Full Model
+    dr1, dr2 = 1, 10
+    extra = np.linspace(0.01, 10)
+    end1 = []
+    pm1 = []
+    end2 = []
+    pm2 = []
+    intra1 = []
+    intra2 = []
+    for s_e in extra:
+        dSdt_ur = lambda S: -(k / W) * S * ((A_p / V) * P_fm_eval(S, s_e, b=dr1) + (A_e / V) * E_fm_eval(S, b=dr1)) + (
+                        j + a) * (
+                                            (A_p / V) * P_b_fm_eval(S, b=dr1) + (A_e / V) * E_b_fm_eval(S, b=dr1)) - V_m * S / (
+                                            V * (K_m + S))
+        dSdt_ur2 = lambda S: -(k / W) * S * ((A_p / V) * P_fm_eval(S, s_e, b=dr2) + (A_e / V) * E_fm_eval(S, b=dr2)) + (
+                        j + a) * (
+                                            (A_p / V) * P_b_fm_eval(S, b=dr2) + (A_e / V) * E_b_fm_eval(S, b=dr2)) - V_m * S / (
+                                            V * (K_m + S))
+        S_i1 = opt.bisect(dSdt_ur, 0, 50)
+        S_i2 = opt.bisect(dSdt_ur2, 0, 50)
+        intra1.append(S_i1)
+        intra2.append(S_i2)
+        _pm1 = P_fm_eval(S_i1, s_e, b=dr1) + P_b_fm_eval(S_i1, b=dr1) + P_u_fm_eval(S_i1, b=dr1)
+        pm1.append(_pm1)
+        _end1 = E_fm_eval(S_i1, b=dr1) + E_b_fm_eval(S_i1, b=dr1) + E_u_fm_eval()
+        end1.append(_end1)
+        _pm2 = P_fm_eval(S_i2, s_e, b=dr2) + P_b_fm_eval(S_i2, b=dr2) + P_u_fm_eval(S_i2, b=dr2)
+        pm2.append(_pm2)
+        _end2 = E_fm_eval(S_i2, b=dr2) + E_b_fm_eval(S_i2, b=dr2) + E_u_fm_eval()
+        end2.append(_end2)
+
+    plt.subplot(121)
+    plt.plot(extra, pm1, "r", label=r"PM, $deubiq_1$", linewidth=5)
+    plt.plot(extra, end1, 'purple', label=r"END, $deubiq_1$", linewidth=5)
+    plt.plot(extra, pm2, "k", label=r"PM, $deubiq_2$", linewidth=5)
+    plt.plot(extra, end2, label=r"END, $deubiq_2$", linewidth=5)
+    plt.xlabel(r"$S_e$", fontsize=15)
+    plt.ylabel("Fur4 Concentration", fontsize=15)
+    plt.title(fr"Full Steady State", fontsize=20)
+    plt.legend()
+    plt.locator_params(axis='both', nbins=4)
+
+    plt.subplot(122)
+    plt.plot(extra, intra1, linewidth=5, label=r"S, $deubiq_1$")
+    plt.plot(extra, intra2, linewidth=5, label=r"S, $deubiq_2$")
+    plt.ylabel("Intracellular Uracil Concentration", fontsize=15)
+    plt.title(fr"Full Steady State", fontsize=20)
+    plt.xlabel("Deubiquitination Rate", fontsize=15)
+    plt.locator_params(axis='both', nbins=4)
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
 
 
 if __name__ == '__main__':
     # comparison_extracellular_uracil()
     # comparison_ubiq_rate()
-    # comparison_recycling_rate()
+    comparison_recycling_rate()
     # comparison_endocytosis_rate()
-    # comparison_deubiq_rate()
+    comparison_deubiq_rate()
     # comparison_unbinding_rate()
     # comparison_prod_rate()
-    compare_degredation_rate()
+    # compare_degredation_rate()
+    recycling_rate_individual()
+    vary_deubiq_extra_uracil()
