@@ -938,13 +938,14 @@ def vary_deubiq_extra_uracil():
     intra2 = []
     for s_e in extra:
         dSdt_ur = lambda S: -(k / W) * S * ((A_p / V) * P_fm_eval(S, s_e, b=dr1) + (A_e / V) * E_fm_eval(S, b=dr1)) + (
-                        j + a) * (
-                                            (A_p / V) * P_b_fm_eval(S, b=dr1) + (A_e / V) * E_b_fm_eval(S, b=dr1)) - V_m * S / (
-                                            V * (K_m + S))
+                j + a) * (
+                                    (A_p / V) * P_b_fm_eval(S, b=dr1) + (A_e / V) * E_b_fm_eval(S, b=dr1)) - V_m * S / (
+                                    V * (K_m + S))
         dSdt_ur2 = lambda S: -(k / W) * S * ((A_p / V) * P_fm_eval(S, s_e, b=dr2) + (A_e / V) * E_fm_eval(S, b=dr2)) + (
-                        j + a) * (
-                                            (A_p / V) * P_b_fm_eval(S, b=dr2) + (A_e / V) * E_b_fm_eval(S, b=dr2)) - V_m * S / (
-                                            V * (K_m + S))
+                j + a) * (
+                                     (A_p / V) * P_b_fm_eval(S, b=dr2) + (A_e / V) * E_b_fm_eval(S,
+                                                                                                 b=dr2)) - V_m * S / (
+                                     V * (K_m + S))
         S_i1 = opt.bisect(dSdt_ur, 0, 50)
         S_i2 = opt.bisect(dSdt_ur2, 0, 50)
         intra1.append(S_i1)
@@ -982,14 +983,52 @@ def vary_deubiq_extra_uracil():
     plt.show()
 
 
+def surface_plot_recycling_degradation():
+    """Plots a surface plot, varying recycling rate and degradation rate."""
+
+    # Define relevant parameters
+    S_e, a, b, A_p, j, K_d, K_m = .1, 1, 1, 314, 100, 0.74, 2.5
+    k, V_m, V, W, y, A_e, g = j / K_d, 8.8 * 10 ** 3, 523, 32, 0.000083, 47, 0.1
+
+    n = 100
+
+    z_space = np.linspace(.002, .01, n)  # range of degradation rates
+    f_space = np.linspace(.1, .5, n)  # range of recycling rates
+    Z, F = np.meshgrid(z_space, f_space, indexing='ij')
+
+    total_end, total_pm, = np.zeros((n, n)), np.zeros((n, n))  # arrays to hold total values
+
+    for i in range(len(Z)):
+        for j in range(len(F)):
+            z, f = Z[i, j], F[i, j]
+            dSdt_ur = lambda S: -(k / W) * S * (
+                    (A_p / V) * P_fm_eval(S, S_e, f=f, z=z) + (A_e / V) * E_fm_eval(S, f=f, z=z)) + (
+                            j + a) * ((A_p / V) * P_b_fm_eval(S, f=f, z=z) + (A_e / V) * E_b_fm_eval(S,
+                            f=f, z=z)) - V_m * S / (V * (K_m + S))
+            S_i = opt.bisect(dSdt_ur, 0, 100)
+            total_end[i,j] = E_fm_eval(S_i, z=z, f=f) + E_b_fm_eval(S_i, z=z, f=f) + E_u_fm_eval(z=z)
+            total_pm[i, j] = P_fm_eval(S_i, S_e, z=z, f=f) + P_b_fm_eval(S_i, z=z, f=f) + P_u_fm_eval(S_i, z=z, f=f)
+
+    plt.pcolormesh(Z, F, total_pm + total_end, cmap="viridis")
+    plt.colorbar()
+    plt.locator_params(axis='both', nbins=4)
+    plt.title("Total Fur4")
+    plt.ylabel("Recycling Rates")
+    plt.xlabel("Degradation Rates")
+    plt.show()
+
+
 if __name__ == '__main__':
     # comparison_extracellular_uracil()
     # comparison_ubiq_rate()
-    comparison_recycling_rate()
+    # comparison_recycling_rate()
     # comparison_endocytosis_rate()
-    comparison_deubiq_rate()
+    # comparison_deubiq_rate()
     # comparison_unbinding_rate()
     # comparison_prod_rate()
     # compare_degredation_rate()
-    recycling_rate_individual()
-    vary_deubiq_extra_uracil()
+    # recycling_rate_individual()
+    # vary_deubiq_extra_uracil()
+    # surface_plot_recycling_degradation()
+    pass
+
